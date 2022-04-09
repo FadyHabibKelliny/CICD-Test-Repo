@@ -39,6 +39,19 @@ jobs:
           else
             echo "Nope!"; exit 1
           fi
+          
+  three:
+    docker:
+      - image: cimg/base:2021.11
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+    steps:
+      - checkout
+      - run:
+          name: "echo an env var that is part of our project"
+          command: |
+            echo $MY_ENV_VAR # this env var must be set within the project
 workflows:
   version: 2
   one_and_two:
@@ -47,3 +60,7 @@ workflows:
       - two:
           requires:
             - one
+      -three:
+          requires:
+            - two
+        
